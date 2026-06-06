@@ -3,40 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Research Console</title>
+    <title>AI IDE - Gemini Engine</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="logo">✦ AI Console</div>
-            <div class="menu">
-                <button class="menu-btn active">New Chat</button>
-                <button class="menu-btn">Settings</button>
-            </div>
-            <div class="status">System: Online</div>
-        </aside>
+    <div class="ide-container">
+        <div class="activity-bar">
+            <div class="icon active" title="Explorer">📁</div>
+            <div class="icon" title="Search">🔍</div>
+            <div class="icon" title="Settings">⚙️</div>
+        </div>
 
-        <main class="chat-wrapper">
-            <header class="chat-header">
-                <h2>Gemini Pro Engine</h2>
-            </header>
+        <div class="sidebar">
+            <div class="sidebar-header">EXPLORER</div>
+            <div class="sidebar-content">
+                <div class="file active">📄 main_engine.py</div>
+                <div class="file">📄 api_config.json</div>
+                <div class="file">📄 requirements.txt</div>
+            </div>
+        </div>
+
+        <div class="editor-container">
+            <div class="tabs">
+                <div class="tab active">main_engine.py <span class="close">×</span></div>
+            </div>
             
-            <div class="chat-container" id="chatContainer">
-                <div class="message ai-message">
-                    Hello Aditya. System initialized and securely connected. What are we researching today?
-                </div>
+            <div class="chat-area" id="chatContainer">
+                <div class="line"><span class="line-num">1</span> <span class="comment"># System Initialized: Google Gemini Pro Engine</span></div>
+                <div class="line"><span class="line-num">2</span> <span class="keyword">System Output:</span> Welcome Aditya. Waiting for execution command...</div>
             </div>
 
-            <div class="input-container">
-                <div class="input-box">
-                    <textarea id="userInput" placeholder="Type your query here... (Shift + Enter for new line)" rows="1"></textarea>
-                    <button id="sendBtn" title="Send Request">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                    </button>
+            <div class="terminal">
+                <div class="terminal-header">TERMINAL - bash</div>
+                <div class="input-row">
+                    <span class="prompt">aditya@quantum-ai:~$</span>
+                    <textarea id="userInput" placeholder="Enter prompt or code... (Shift+Enter for newline)"></textarea>
+                    <button id="sendBtn">Execute</button>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
