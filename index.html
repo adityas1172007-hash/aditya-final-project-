@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Research Console</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">✦ AI Console</div>
+            <div class="menu">
+                <button class="menu-btn active">New Chat</button>
+                <button class="menu-btn">Settings</button>
+            </div>
+            <div class="status">System: Online</div>
+        </aside>
+
+        <main class="chat-wrapper">
+            <header class="chat-header">
+                <h2>Gemini Pro Engine</h2>
+            </header>
+            
+            <div class="chat-container" id="chatContainer">
+                <div class="message ai-message">
+                    Hello Aditya. System initialized and securely connected. What are we researching today?
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-box">
+                    <textarea id="userInput" placeholder="Type your query here... (Shift + Enter for new line)" rows="1"></textarea>
+                    <button id="sendBtn" title="Send Request">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
