@@ -2,129 +2,160 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Consolas', 'Courier New', monospace; /* IDE standard font */
 }
 
 body {
-    background-color: #121212; /* Deep dark background */
-    color: #e0e0e0;
+    background-color: #1e1e1e; /* VS Code dark background */
+    color: #d4d4d4;
     height: 100vh;
-    display: flex;
+    overflow: hidden;
 }
 
-.app-container {
+.ide-container {
     display: flex;
-    width: 100%;
     height: 100%;
 }
 
-/* Sidebar Styling */
-.sidebar {
-    width: 260px;
-    background-color: #1e1e1e;
-    border-right: 1px solid #333;
+/* Activity Bar */
+.activity-bar {
+    width: 50px;
+    background-color: #333333;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    align-items: center;
+    padding-top: 15px;
+    border-right: 1px solid #252526;
 }
 
-.logo {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #fff;
-    margin-bottom: 30px;
-    letter-spacing: 1px;
-}
-
-.menu {
-    flex-grow: 1;
-}
-
-.menu-btn {
-    width: 100%;
-    background: transparent;
-    color: #aaa;
-    border: none;
-    text-align: left;
-    padding: 12px;
-    font-size: 1rem;
+.icon {
+    font-size: 20px;
+    margin-bottom: 25px;
     cursor: pointer;
-    border-radius: 6px;
+    opacity: 0.4;
     transition: 0.2s;
-    margin-bottom: 5px;
 }
 
-.menu-btn:hover, .menu-btn.active {
-    background-color: #2d2d2d;
-    color: #fff;
+.icon:hover { opacity: 0.8; }
+.icon.active { opacity: 1; border-left: 2px solid #fff; padding-left: 2px; }
+
+/* Sidebar (Explorer) */
+.sidebar {
+    width: 200px;
+    background-color: #252526;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #333;
 }
 
-.status {
-    font-size: 0.8rem;
-    color: #4caf50; /* Green indicator */
+.sidebar-header {
+    padding: 12px 15px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #cccccc;
 }
 
-/* Main Chat Area */
-.chat-wrapper {
+.file {
+    padding: 6px 15px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #cccccc;
+}
+
+.file:hover { background-color: #2a2d2e; }
+.file.active { background-color: #37373d; color: #fff; }
+
+/* Main Editor Area */
+.editor-container {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    background-color: #1e1e1e;
+}
+
+.tabs {
+    display: flex;
+    background-color: #2d2d2d;
+}
+
+.tab {
+    background-color: #1e1e1e;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: #fff;
+    border-top: 2px solid #007acc; /* VS Code active tab line */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tab .close {
+    color: #888;
+    cursor: pointer;
+    font-size: 16px;
+}
+.tab .close:hover { color: #fff; }
+
+/* Chat / Code Output Area */
+.chat-area {
+    flex-grow: 1;
+    padding: 15px 0;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.line {
+    display: flex;
+    padding-right: 15px;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.line:hover { background-color: #2a2d2e; }
+
+.line-num {
+    color: #858585;
+    min-width: 45px;
+    text-align: right;
+    margin-right: 20px;
+    user-select: none;
+}
+
+/* Syntax Highlighting Colors */
+.comment { color: #6a9955; }
+.keyword { color: #569cd6; font-weight: bold; }
+.user-msg { color: #ce9178; } /* String color in VS Code */
+.ai-msg { color: #dcdcaa; } /* Function color in VS Code */
+
+/* Terminal / Input Area */
+.terminal {
+    height: 180px;
+    background-color: #1e1e1e;
+    border-top: 1px solid #444;
+    display: flex;
+    flex-direction: column;
+}
+
+.terminal-header {
+    padding: 8px 15px;
+    font-size: 12px;
+    color: #e7e7e7;
+    text-transform: uppercase;
+    border-bottom: 1px solid #333;
+}
+
+.input-row {
+    display: flex;
+    padding: 15px;
+    gap: 10px;
     height: 100%;
 }
 
-.chat-header {
-    padding: 15px 30px;
-    background-color: #1e1e1e;
-    border-bottom: 1px solid #333;
-    font-size: 0.9rem;
-    color: #aaa;
-}
-
-.chat-container {
-    flex-grow: 1;
-    padding: 30px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.message {
-    max-width: 80%;
-    padding: 15px;
-    border-radius: 8px;
-    line-height: 1.5;
-    word-wrap: break-word;
-}
-
-.user-message {
-    background-color: #2d2d2d;
-    color: #fff;
-    align-self: flex-end;
-    border-bottom-right-radius: 0;
-}
-
-.ai-message {
-    background-color: #1e1e1e;
-    border: 1px solid #333;
-    color: #e0e0e0;
-    align-self: flex-start;
-    border-bottom-left-radius: 0;
-}
-
-/* Input Area */
-.input-container {
-    padding: 20px 30px;
-    background-color: #121212;
-}
-
-.input-box {
-    display: flex;
-    background-color: #1e1e1e;
-    border: 1px solid #333;
-    border-radius: 8px;
-    padding: 10px;
-    align-items: flex-end;
+.prompt {
+    color: #4af626; /* Terminal green */
+    font-size: 14px;
+    white-space: nowrap;
 }
 
 textarea {
@@ -132,32 +163,23 @@ textarea {
     background: transparent;
     border: none;
     color: #fff;
-    font-size: 1rem;
-    resize: none;
     outline: none;
-    padding: 8px;
-    max-height: 150px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: none;
 }
 
 button#sendBtn {
-    background-color: #007acc; /* Colab/VSCode blue */
+    background-color: #007acc; /* VS Code Blue */
     color: white;
     border: none;
-    border-radius: 6px;
-    padding: 10px;
+    padding: 0 20px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
+    font-size: 13px;
+    border-radius: 3px;
+    height: 35px;
+    transition: background 0.2s;
 }
 
-button#sendBtn:hover {
-    background-color: #005f9e;
-}
-
-button#sendBtn:disabled {
-    background-color: #555;
-    cursor: not-allowed;
-}
-
+button#sendBtn:hover { background-color: #005f9e; }
+button#sendBtn:disabled { background-color: #555; cursor: not-allowed; }
