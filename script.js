@@ -1,17 +1,14 @@
-// Tumhare PythonAnywhere server ka EXACT target route
+// Target Cloud Server 
 const BACKEND_URL = "https://aditya7.pythonanywhere.com/api/chat";
 
 const chatContainer = document.getElementById("chatContainer");
 const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 
-// Auto-resize textarea logic
-userInput.addEventListener("input", function() {
-    this.style.height = "auto";
-    this.style.height = (this.scrollHeight) + "px";
-});
+// Line counter (starts after the 2 initial dummy lines in HTML)
+let lineCount = 2; 
 
-// Handle 'Enter' to send, 'Shift+Enter' for new line
+// Auto-trigger on Enter (Shift+Enter for multiline)
 userInput.addEventListener("keydown", function(e) {
     if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
@@ -21,24 +18,42 @@ userInput.addEventListener("keydown", function(e) {
 
 sendBtn.addEventListener("click", sendMessage);
 
+// Core function to add a line to the VS Code Editor interface
+function addLine(content, typeClass) {
+    lineCount++;
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "line";
+    
+    const numSpan = document.createElement("span");
+    numSpan.className = "line-num";
+    numSpan.innerText = lineCount;
+    
+    const contentSpan = document.createElement("span");
+    contentSpan.className = typeClass;
+    contentSpan.innerText = content;
+    
+    lineDiv.appendChild(numSpan);
+    lineDiv.appendChild(contentSpan);
+    
+    chatContainer.appendChild(lineDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    
+    return lineDiv; // Return element in case we need to delete it (like typing indicator)
+}
+
 async function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
 
-    // Display User Message
-    appendMessage(text, "user-message");
+    // Display User Input
+    addLine(`>>> ${text}`, "user-msg");
     userInput.value = "";
-    userInput.style.height = "auto";
-    
-    // Disable input while waiting
     sendBtn.disabled = true;
-    
-    // Create a temporary "Analyzing..." element
-    const typingId = "typing-" + Date.now();
-    appendMessage("Analyzing...", "ai-message", typingId);
+
+    // Loading State
+    const typingLine = addLine("# Executing request... fetching data from API.", "comment");
 
     try {
-        // Backend ko POST request bhejna
         const response = await fetch(BACKEND_URL, {
             method: "POST",
             headers: {
@@ -49,40 +64,23 @@ async function sendMessage() {
 
         const data = await response.json();
         
-        // Remove typing indicator
-        const typingElement = document.getElementById(typingId);
-        if (typingElement) typingElement.remove();
+        // Remove loading state
+        typingLine.remove();
 
-        // Agar response successfully aaya
+        // Handle Response
         if (response.ok && data.candidates && data.candidates.length > 0) {
             const aiReply = data.candidates[0].content.parts[0].text;
-            appendMessage(aiReply, "ai-message");
+            addLine(aiReply, "ai-msg");
         } else {
-            console.error("Backend Error Data:", data);
-            appendMessage("System Error: Backend ne invalid response diya. Console check karo.", "ai-message");
+            console.error("Payload Data:", data);
+            addLine(`Exception: Backend rejected execution. Check console logs.`, "keyword");
         }
     } catch (error) {
-        // Network ya Fetch fail hone par
-        const typingElement = document.getElementById(typingId);
-        if (typingElement) typingElement.remove();
-        
-        console.error("Fetch Network Error:", error);
-        appendMessage("Network Error: Connection fail ho gaya. Verify karo ki tumhara internet chal raha hai aur backend URL sahi hai.", "ai-message");
+        typingLine.remove();
+        console.error("Fetch Logic Error:", error);
+        addLine(`NetworkError: Connection to ${BACKEND_URL} timed out or failed.`, "keyword");
     } finally {
         sendBtn.disabled = false;
         userInput.focus();
     }
-}
-
-// UI mein text append karne ka logic
-function appendMessage(text, className, id = null) {
-    const msgDiv = document.createElement("div");
-    msgDiv.className = "message " + className;
-    if (id) msgDiv.id = id;
-    
-    // HTML tags se bachne ke liye aur proper format ke liye innerText
-    msgDiv.innerText = text;
-    
-    chatContainer.appendChild(msgDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
