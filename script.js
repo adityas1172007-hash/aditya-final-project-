@@ -1,4 +1,4 @@
-// Tumhare PythonAnywhere server ka exact address
+// Tumhare PythonAnywhere server ka EXACT target route
 const BACKEND_URL = "https://aditya7.pythonanywhere.com/api/chat";
 
 const chatContainer = document.getElementById("chatContainer");
@@ -33,11 +33,12 @@ async function sendMessage() {
     // Disable input while waiting
     sendBtn.disabled = true;
     
-    // Create a temporary "typing..." element
+    // Create a temporary "Analyzing..." element
     const typingId = "typing-" + Date.now();
     appendMessage("Analyzing...", "ai-message", typingId);
 
     try {
+        // Backend ko POST request bhejna
         const response = await fetch(BACKEND_URL, {
             method: "POST",
             headers: {
@@ -49,31 +50,37 @@ async function sendMessage() {
         const data = await response.json();
         
         // Remove typing indicator
-        document.getElementById(typingId).remove();
+        const typingElement = document.getElementById(typingId);
+        if (typingElement) typingElement.remove();
 
+        // Agar response successfully aaya
         if (response.ok && data.candidates && data.candidates.length > 0) {
             const aiReply = data.candidates[0].content.parts[0].text;
             appendMessage(aiReply, "ai-message");
         } else {
-            console.error("Server Error:", data);
-            appendMessage("Error: The connection to the backend failed or returned an invalid response.", "ai-message");
+            console.error("Backend Error Data:", data);
+            appendMessage("System Error: Backend ne invalid response diya. Console check karo.", "ai-message");
         }
     } catch (error) {
-        document.getElementById(typingId).remove();
-        console.error("Fetch Error:", error);
-        appendMessage("Network Error: Make sure your PythonAnywhere server is active and CORS is allowed.", "ai-message");
+        // Network ya Fetch fail hone par
+        const typingElement = document.getElementById(typingId);
+        if (typingElement) typingElement.remove();
+        
+        console.error("Fetch Network Error:", error);
+        appendMessage("Network Error: Connection fail ho gaya. Verify karo ki tumhara internet chal raha hai aur backend URL sahi hai.", "ai-message");
     } finally {
         sendBtn.disabled = false;
         userInput.focus();
     }
 }
 
+// UI mein text append karne ka logic
 function appendMessage(text, className, id = null) {
     const msgDiv = document.createElement("div");
     msgDiv.className = "message " + className;
     if (id) msgDiv.id = id;
     
-    // Use innerText to naturally handle whitespace and line breaks
+    // HTML tags se bachne ke liye aur proper format ke liye innerText
     msgDiv.innerText = text;
     
     chatContainer.appendChild(msgDiv);
